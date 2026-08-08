@@ -1,0 +1,32 @@
+---
+description: Enforce RN Lab AGENTS.md engineering standards on every change
+alwaysApply: true
+---
+
+# RN Lab — AGENTS.md
+
+Follow `/AGENTS.md` for all work in this repository. Non-negotiable summary:
+
+## Before writing code
+1. Search for existing components, hooks, utilities, types, and services.
+2. Prefer **Reuse → Extend → Compose → Create**.
+3. Do not copy-paste screens or duplicate headers/metrics/terminals/actions.
+
+## Architecture
+- Screens orchestrate; components present; hooks own reusable state/behavior; domain modules own pure logic.
+- Stay consistent with existing folders: `src/components`, `src/screens`, `src/hooks`, `src/theme`, `src/data`.
+- Prefer feature-local modules when an experiment grows (constants, types, hooks) — do not dump everything in one giant screen file.
+
+## Design system
+- Use tokens from `src/theme` (`colors`, `spacing`, `radii`, `typography`, `categoryColors`).
+- Prefer shared experiment UI from `src/components/experiment` and `src/components/LabUI`:
+  - `ExperimentHeader`, `CodeBlock`, `MetricGrid`, `MetricCard`, `QueuePanel`
+  - `ExperimentActions`, `ColoredTerminal` / `TerminalLog`, `SectionHeader`, `ExperimentNote`
+- Do not invent one-off colors, radii, or button styles when tokens/components exist.
+
+## Quality
+- No `any` without a documented reason; prefer discriminated unions for experiment state.
+- Keep business logic out of JSX; extract to hooks/utilities.
+- Prefer screens under ~200 lines; split by responsibility when larger.
+- Validate with TypeScript + ESLint before finishing.
+- Leave the codebase cleaner than you found it.
