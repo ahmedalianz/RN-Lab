@@ -7,38 +7,28 @@ import {
   SectionHeader,
 } from '../../../components/experiment';
 import {MetricCard} from '../../../components/LabUI';
-import {useClosureMemory} from '../../../hooks/useClosureMemory';
+import {useMemoryRetention} from '../../../hooks/useMemoryRetention';
 import {categoryColors, colors, spacing} from '../../../theme';
-import {
-  ClosureCodePanel,
-  HeapMemoryMap,
-  Inspector,
-  LeakSimulation,
-  ScopeChain,
-} from './closure/ClosurePanels';
+import { LeakSimulation} from './memory/MemoryPanels';
 
 const JS = categoryColors.javascript;
 const ACCENT = colors.secondary;
 const ACTIVE = colors.tertiaryContainer;
 
-export function ClosureMemoryScreen() {
+export function MemoryRetentionScreen() {
   const insets = useSafeAreaInsets();
   const {
-    count,
     closures,
     retained,
     objects,
     heapMb,
-    stepHighlight,
     leakKind,
     setLeakKind,
     spark,
-    run,
-    step,
     reset,
     createLeak,
     release,
-  } = useClosureMemory();
+  } = useMemoryRetention();
 
   return (
     <ScrollView
@@ -49,27 +39,13 @@ export function ClosureMemoryScreen() {
       ]}>
       <ExperimentHeader
         domainLabel="JAVASCRIPT"
-        title="CLOSURE & MEMORY"
+        title="MEMORY RETENTION"
         statusLabel="READY"
         statusColor={colors.statusMastered}
-        description="Inspect lexical scope, captured variables and memory retention."
+        description="Simulate heap pressure, retained objects, and GC eligibility."
       />
 
-      <ClosureCodePanel
-        stepHighlight={stepHighlight}
-        onRun={run}
-        onStep={step}
-        onReset={reset}
-      />
-
-      <SectionHeader title="SCOPE CHAIN" />
-      <ScopeChain count={count} />
-
-      <SectionHeader title="INSPECTOR" />
-      <Inspector count={count} />
-
-      <HeapMemoryMap />
-
+      <SectionHeader title="HEAP METRICS" />
       <MetricGrid>
         <MetricCard label="HEAP SIZE" value={`${heapMb} MB`} accent={JS} />
         <MetricCard
@@ -96,13 +72,14 @@ export function ClosureMemoryScreen() {
         onSelectLeak={setLeakKind}
         onCreateLeak={createLeak}
         onRelease={release}
+        onReset={reset}
         spark={spark}
       />
 
       <ExperimentNote title="Core Principle">
-        Closures retain their lexical environment. If a global variable,
-        listener, or timer keeps a closure alive, captured memory cannot be
-        collected — even after the outer function returns.
+        Memory stays alive while something reachable still references it —
+        globals, listeners, timers, or subscriptions. Drop those references and
+        the heap becomes eligible for garbage collection.
       </ExperimentNote>
     </ScrollView>
   );

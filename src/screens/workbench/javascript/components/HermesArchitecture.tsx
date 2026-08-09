@@ -1,24 +1,30 @@
-import {Pressable, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Text} from '../../../../components/Text';
-import {HERMES_ACCENT} from '../../../../experiments/javascript/hermesRuntime';
+import {
+  HERMES_ACCENT,
+  type HermesHighlight,
+} from '../../../../experiments/javascript/hermesRuntime';
 import {colors, radii, spacing} from '../../../../theme';
 
-type Highlight = 'runtime' | 'rn' | null;
-
 type Props = {
-  highlight: Highlight;
-  onHighlight: (value: Highlight) => void;
+  highlight: HermesHighlight;
 };
 
-export function HermesArchitecture({highlight, onHighlight}: Props) {
+export function HermesArchitecture({highlight, }: Props) {
   return (
     <View style={styles.arch}>
       <View style={styles.archRow}>
-        <ArchNode label="JS" />
+        <ArchNode label="JS" active={highlight === 'js'}/>
         <ArchArrow horizontal />
-        <ArchNode label="Parser" />
+        <ArchNode
+          label="Parser"
+          active={highlight === 'parser'}
+        />
         <ArchArrow horizontal />
-        <ArchNode label="Bytecode" />
+        <ArchNode
+          label="Bytecode"
+          active={highlight === 'bytecode'}
+        />
       </View>
       <View style={styles.archMid}>
         <View style={styles.archDownCol}>
@@ -26,18 +32,19 @@ export function HermesArchitecture({highlight, onHighlight}: Props) {
           <ArchNode
             label="Runtime"
             active={highlight === 'runtime'}
-            onPress={() => onHighlight('runtime')}
           />
           <ArchArrow />
           <ArchNode
             label="React Native"
             active={highlight === 'rn'}
-            onPress={() => onHighlight('rn')}
           />
         </View>
         <View style={styles.archSide}>
           <ArchArrow horizontal />
-          <ArchNode label="Memory / GC" />
+          <ArchNode
+            label="Memory / GC"
+            active={highlight === 'memory'}
+          />
         </View>
       </View>
     </View>
@@ -47,22 +54,18 @@ export function HermesArchitecture({highlight, onHighlight}: Props) {
 function ArchNode({
   label,
   active,
-  onPress,
 }: {
   label: string;
   active?: boolean;
-  onPress?: () => void;
 }) {
   return (
-    <Pressable
-      onPress={onPress}
-      style={[styles.archNode, active && styles.archNodeActive]}>
+    <View style={[styles.archNode, active && styles.archNodeActive]}>
       <Text
         variant="codeSm"
         color={active ? HERMES_ACCENT.active : colors.onSurfaceVariant}>
         {label}
       </Text>
-    </Pressable>
+    </View>
   );
 }
 

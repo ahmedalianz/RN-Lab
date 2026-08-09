@@ -2,10 +2,10 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {ExperimentDetailsScreen} from '../screens/core/ExperimentDetailsScreen';
 import {ExperimentsScreen} from '../screens/core/ExperimentsScreen';
 import {
-  AsyncPatternsScreen,
-  ClosureMemoryScreen,
+  ClosureScopeScreen,
   HermesRuntimeScreen,
   JavaScriptEventLoopScreen,
+  MemoryRetentionScreen,
   PromiseExecutionScreen,
   ReactMemoizationScreen,
   RenderingReconciliationScreen,
@@ -40,9 +40,14 @@ export function ExperimentsNavigator() {
         options={{title: 'Promises'}}
       />
       <Stack.Screen
-        name="ClosureMemory"
-        component={ClosureMemoryScreen}
+        name="ClosureScope"
+        component={ClosureScopeScreen}
         options={{title: 'Closures'}}
+      />
+      <Stack.Screen
+        name="MemoryRetention"
+        component={MemoryRetentionScreen}
+        options={{title: 'Memory'}}
       />
       <Stack.Screen
         name="RenderingReconciliation"
@@ -58,11 +63,6 @@ export function ExperimentsNavigator() {
         name="StateManagementPlayground"
         component={StateManagementPlaygroundScreen}
         options={{title: 'State'}}
-      />
-      <Stack.Screen
-        name="AsyncPatterns"
-        component={AsyncPatternsScreen}
-        options={{title: 'Async'}}
       />
       <Stack.Screen
         name="HermesRuntime"

@@ -1,6 +1,6 @@
-import {ScrollView, StyleSheet, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {Play} from 'lucide-react-native';
+import { Play, RotateCcw } from 'lucide-react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   ExperimentActions,
   ExperimentHeader,
@@ -8,17 +8,30 @@ import {
   MetricGrid,
   SectionHeader,
 } from '../../../components/experiment';
-import {MetricCard, TerminalLog} from '../../../components/LabUI';
-import {Text} from '../../../components/Text';
-import {HERMES_ACCENT} from '../../../experiments/javascript/hermesRuntime';
-import {useHermesRuntime} from '../../../hooks/useHermesRuntime';
-import {colors, spacing} from '../../../theme';
-import {HermesArchitecture} from './components/HermesArchitecture';
+import { MetricCard, TerminalLog } from '../../../components/LabUI';
+import { Text } from '../../../components/Text';
+import { HERMES_ACCENT } from '../../../experiments/javascript/hermesRuntime';
+import { useHermesRuntime } from '../../../hooks/useHermesRuntime';
+import { colors, radii, spacing } from '../../../theme';
+import { HermesArchitecture } from './components/HermesArchitecture';
+import { HermesWorkloadControls } from './components/HermesWorkloadControls';
 
 export function HermesRuntimeScreen() {
   const insets = useSafeAreaInsets();
-  const {active, metrics, logs, highlight, setHighlight, runBenchmark} =
-    useHermesRuntime();
+  const {
+    active,
+    phase,
+    itemCount,
+    setItemCount,
+    adjustItemCount,
+    canAdjust,
+    itemBounds,
+    displayMetrics,
+    logs,
+    highlight,
+    runBenchmark,
+    reset,
+  } = useHermesRuntime();
 
   return (
     <ScrollView
@@ -30,7 +43,7 @@ export function HermesRuntimeScreen() {
       <ExperimentHeader
         domainLabel="JAVASCRIPT"
         title="Hermes Runtime"
-        description="Inspect the JavaScript engine powering React Native."
+        description="Simulate bytecode compile, heap allocation, execution, and GC."
         trailing={
           <View style={styles.status}>
             <View
@@ -46,46 +59,76 @@ export function HermesRuntimeScreen() {
             <Text
               variant="labelCaps"
               color={active ? colors.statusMastered : colors.outline}>
-              {active ? 'ACTIVE' : 'IDLE'}
+              {active ? 'RUNNING' : phase === 'done' ? 'DONE' : 'IDLE'}
             </Text>
           </View>
         }
       />
 
+      <HermesWorkloadControls
+        itemCount={itemCount}
+        canAdjust={canAdjust}
+        step={itemBounds.step}
+        onSelectPreset={setItemCount}
+        onAdjust={adjustItemCount}
+      />
+
+      <View style={styles.phaseRow}>
+        <Text variant="labelCaps" color={colors.outline}>
+          PHASE
+        </Text>
+        <View style={styles.phaseBadge}>
+          <Text variant="labelCaps" color={colors.primaryFixedDim}>
+            {phase.toUpperCase()}
+          </Text>
+        </View>
+      </View>
+
       <MetricGrid>
         <MetricCard
           label="HEAP"
-          value={metrics.heap}
+          value={displayMetrics.heap}
           accent={HERMES_ACCENT.heap}
+          valueColor={
+            highlight === 'memory' ? HERMES_ACCENT.heap : colors.onSurface
+          }
         />
         <MetricCard
           label="EXECUTION"
-          value={metrics.execution}
+          value={displayMetrics.execution}
           accent={HERMES_ACCENT.active}
           valueColor={HERMES_ACCENT.active}
         />
         <MetricCard
           label="GC"
-          value={metrics.gc}
+          value={displayMetrics.gc}
           accent={HERMES_ACCENT.gc}
           valueColor={HERMES_ACCENT.gc}
         />
         <MetricCard
           label="BYTECODE"
-          value={metrics.bytecode}
+          value={displayMetrics.bytecode}
           accent={HERMES_ACCENT.bytecode}
-          valueColor={HERMES_ACCENT.bytecode}
+          valueColor={
+            highlight === 'bytecode'
+              ? HERMES_ACCENT.bytecode
+              : colors.onSurface
+          }
         />
       </MetricGrid>
 
       <ExperimentActions
-        primaryLabel="RUN BENCHMARK"
+        primaryLabel={active ? 'RUNNING…' : 'RUN SIMULATION'}
         primaryIcon={Play}
         onPrimary={runBenchmark}
+        primaryDisabled={active}
+        secondaryLabel="RESET"
+        secondaryIcon={RotateCcw}
+        onSecondary={reset}
       />
 
       <SectionHeader title="ARCHITECTURE" />
-      <HermesArchitecture highlight={highlight} onHighlight={setHighlight} />
+      <HermesArchitecture highlight={highlight} />
 
       <TerminalLog
         title="TERMINAL LOGS"
@@ -97,9 +140,9 @@ export function HermesRuntimeScreen() {
       />
 
       <ExperimentNote title="Engine Note">
-        Hermes compiles JavaScript ahead of time into compact bytecode,
-        reducing parse time and memory on device. GC pauses show up here when
-        retained closures or large allocations pressure the heap.
+        Larger workloads increase bytecode size, heap allocation, execution
+        time, and GC pause. Hermes still avoids a full JS parse on device by
+        shipping ahead-of-time bytecode.
       </ExperimentNote>
     </ScrollView>
   );
@@ -120,5 +163,17 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
+  },
+  phaseRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  phaseBadge: {
+    borderWidth: 1,
+    borderColor: colors.outlineVariant,
+    borderRadius: radii.default,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: 4,
   },
 });

@@ -1,16 +1,14 @@
 import {useCallback, useMemo, useState} from 'react';
 import {
-  INITIAL_CLOSURE_METRICS,
+  INITIAL_MEMORY_METRICS,
   applyCreateLeak,
   applyRelease,
-  applyRun,
-  applyStep,
   buildSparkline,
   type LeakKind,
-} from '../experiments/javascript/closureMemory';
+} from '../experiments/javascript/memoryRetention';
 
-export function useClosureMemory() {
-  const [metrics, setMetrics] = useState(INITIAL_CLOSURE_METRICS);
+export function useMemoryRetention() {
+  const [metrics, setMetrics] = useState(INITIAL_MEMORY_METRICS);
   const [leakKind, setLeakKind] = useState<LeakKind>('listener');
 
   const spark = useMemo(
@@ -18,16 +16,9 @@ export function useClosureMemory() {
     [metrics.retained],
   );
 
-  const run = useCallback(() => {
-    setMetrics(applyRun);
-  }, []);
-
-  const step = useCallback(() => {
-    setMetrics(applyStep);
-  }, []);
-
   const reset = useCallback(() => {
-    setMetrics(INITIAL_CLOSURE_METRICS);
+    setMetrics(INITIAL_MEMORY_METRICS);
+    setLeakKind('listener');
   }, []);
 
   const createLeak = useCallback(() => {
@@ -39,17 +30,13 @@ export function useClosureMemory() {
   }, []);
 
   return {
-    count: metrics.count,
     closures: metrics.closures,
     retained: metrics.retained,
     objects: metrics.objects,
     heapMb: metrics.heapMb,
-    stepHighlight: metrics.stepHighlight,
     leakKind,
     setLeakKind,
     spark,
-    run,
-    step,
     reset,
     createLeak,
     release,

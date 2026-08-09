@@ -1,8 +1,7 @@
 ---
 description: Enforce RN Lab AGENTS.md engineering standards on every change
-alwaysApply: true
+alwaysApply: false
 ---
-
 # RN Lab — AGENTS.md
 
 Follow `/AGENTS.md` for all work in this repository. Non-negotiable summary:

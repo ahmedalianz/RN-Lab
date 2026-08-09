@@ -14,11 +14,11 @@ import {NativeModulesCatalogScreen} from '../screens/labs/NativeModulesCatalogSc
 import {
   JavaScriptEventLoopScreen,
   PromiseExecutionScreen,
-  ClosureMemoryScreen,
+  ClosureScopeScreen,
+  MemoryRetentionScreen,
   RenderingReconciliationScreen,
   ReactMemoizationScreen,
   StateManagementPlaygroundScreen,
-  AsyncPatternsScreen,
   HermesRuntimeScreen,
   RnArchitectureOverviewScreen,
   BridgePlaygroundScreen,
@@ -95,11 +95,11 @@ export function LabsNavigator() {
       <Stack.Screen name="StorageDashboard" component={StorageDashboardScreen} options={{title: 'Storage'}} />
       <Stack.Screen name="JavaScriptEventLoop" component={JavaScriptEventLoopScreen} options={{title: 'Event Loop'}} />
       <Stack.Screen name="PromiseExecution" component={PromiseExecutionScreen} options={{title: 'Promise Execution'}} />
-      <Stack.Screen name="ClosureMemory" component={ClosureMemoryScreen} options={{title: 'Closure Memory'}} />
+      <Stack.Screen name="ClosureScope" component={ClosureScopeScreen} options={{title: 'Closures'}} />
+      <Stack.Screen name="MemoryRetention" component={MemoryRetentionScreen} options={{title: 'Memory Retention'}} />
       <Stack.Screen name="RenderingReconciliation" component={RenderingReconciliationScreen} options={{title: 'Rendering Reconciliation'}} />
       <Stack.Screen name="ReactMemoization" component={ReactMemoizationScreen} options={{title: 'React Memoization'}} />
       <Stack.Screen name="StateManagementPlayground" component={StateManagementPlaygroundScreen} options={{title: 'State Management Playground'}} />
-      <Stack.Screen name="AsyncPatterns" component={AsyncPatternsScreen} options={{title: 'Async Patterns'}} />
       <Stack.Screen name="HermesRuntime" component={HermesRuntimeScreen} options={{title: 'Hermes Runtime'}} />
       <Stack.Screen name="RnArchitectureOverview" component={RnArchitectureOverviewScreen} options={{title: 'Rn Architecture Overview'}} />
       <Stack.Screen name="BridgePlayground" component={BridgePlaygroundScreen} options={{title: 'Bridge Playground'}} />

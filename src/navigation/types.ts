@@ -9,11 +9,11 @@ export type ExperimentsStackParamList = {
   ExperimentDetails: {experimentId: string};
   JavaScriptEventLoop: undefined;
   PromiseExecution: undefined;
-  ClosureMemory: undefined;
+  ClosureScope: undefined;
+  MemoryRetention: undefined;
   RenderingReconciliation: undefined;
   ReactMemoization: undefined;
   StateManagementPlayground: undefined;
-  AsyncPatterns: undefined;
   HermesRuntime: undefined;
 };
 
@@ -30,11 +30,11 @@ export type LabsStackParamList = {
   StorageDashboard: undefined;
   JavaScriptEventLoop: undefined;
   PromiseExecution: undefined;
-  ClosureMemory: undefined;
+  ClosureScope: undefined;
+  MemoryRetention: undefined;
   RenderingReconciliation: undefined;
   ReactMemoization: undefined;
   StateManagementPlayground: undefined;
-  AsyncPatterns: undefined;
   HermesRuntime: undefined;
   RnArchitectureOverview: undefined;
   BridgePlayground: undefined;

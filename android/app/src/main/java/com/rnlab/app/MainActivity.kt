@@ -1,4 +1,4 @@
-package com.securepay.app
+package com.rnlab.app
 
 import android.os.Bundle
 import com.facebook.react.ReactActivity

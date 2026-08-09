@@ -1,12 +1,12 @@
 import {useEffect} from 'react';
 import {
   Easing,
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
   withTiming,
 } from 'react-native-reanimated';
+import {scheduleOnRN} from 'react-native-worklets';
 import BootSplash from 'react-native-bootsplash';
 import {SPLASH_BOOT_LINES, SPLASH_TIMING} from '../experiments/core/splash';
 
@@ -68,7 +68,7 @@ export function useSplashSequence({onFinished}: Options) {
         },
         finished => {
           if (finished) {
-            runOnJS(finish)();
+            scheduleOnRN(finish);
           }
         },
       );
