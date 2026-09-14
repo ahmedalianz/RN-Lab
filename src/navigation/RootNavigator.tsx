@@ -1,51 +1,72 @@
-import {NavigationContainer, DarkTheme} from '@react-navigation/native';
+import React, {useEffect} from 'react';
+import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {GlobalSearchScreen} from '../screens/core/GlobalSearchScreen';
-import {SettingsScreen} from '../screens/core/SettingsScreen';
-import {SplashScreen} from '../screens/core/SplashScreen';
+import RNBootSplash from 'react-native-bootsplash';
+import {DiagnosticsScreen, setNavigationReady} from '../features/diagnostics';
+import {DeepLinkingPlaygroundScreen} from '../features/deepLinking';
+import {HomeScreen} from '../features/home';
+import {NotificationsPlaygroundScreen} from '../features/notifications';
+import {SslPinningPlaygroundScreen} from '../features/sslPinning';
+import {logEvent} from '../services/logging';
 import {colors} from '../theme';
-import {MainTabs} from './MainTabs';
-import {stackScreenOptions} from './options';
 import type {RootStackParamList} from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-const labTheme = {
-  ...DarkTheme,
-  colors: {
-    ...DarkTheme.colors,
-    background: colors.background,
-    card: colors.surfaceContainer,
-    text: colors.onSurface,
-    border: colors.border,
-    primary: colors.primaryContainer,
-    notification: colors.secondary,
-  },
+const screenOptions = {
+  headerStyle: {backgroundColor: colors.surface},
+  headerTintColor: colors.text.primary,
+  headerTitleStyle: {color: colors.text.primary},
+  contentStyle: {backgroundColor: colors.background},
 };
 
 export function RootNavigator() {
+  useEffect(() => {
+    logEvent({
+      module: 'navigation',
+      event: 'ROOT_NAVIGATOR_MOUNTED',
+      result: 'ok',
+    });
+  }, []);
+
   return (
-    <NavigationContainer theme={labTheme}>
-      <Stack.Navigator screenOptions={stackScreenOptions}>
+    <NavigationContainer
+      onReady={() => {
+        setNavigationReady(true);
+        logEvent({
+          module: 'navigation',
+          event: 'NAVIGATION_READY',
+          result: 'ok',
+        });
+        RNBootSplash.hide({fade: true}).catch(() => {
+          // Native splash may already be dismissed in some reload paths.
+        });
+      }}>
+      <Stack.Navigator initialRouteName="Home" screenOptions={screenOptions}>
         <Stack.Screen
-          name="Splash"
-          component={SplashScreen}
-          options={{headerShown: false}}
+          name="Home"
+          component={HomeScreen}
+          options={{title: 'Playground'}}
         />
         <Stack.Screen
-          name="Main"
-          component={MainTabs}
-          options={{headerShown: false}}
+          name="Notifications"
+          component={NotificationsPlaygroundScreen}
+          options={{title: 'Push Notifications'}}
         />
         <Stack.Screen
-          name="GlobalSearch"
-          component={GlobalSearchScreen}
-          options={{presentation: 'modal', title: 'Search'}}
+          name="DeepLinking"
+          component={DeepLinkingPlaygroundScreen}
+          options={{title: 'Deep Linking'}}
         />
         <Stack.Screen
-          name="Settings"
-          component={SettingsScreen}
-          options={{title: 'Settings'}}
+          name="SslPinning"
+          component={SslPinningPlaygroundScreen}
+          options={{title: 'SSL Pinning'}}
+        />
+        <Stack.Screen
+          name="Diagnostics"
+          component={DiagnosticsScreen}
+          options={{title: 'Debug / Diagnostics'}}
         />
       </Stack.Navigator>
     </NavigationContainer>

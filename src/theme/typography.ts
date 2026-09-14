@@ -1,64 +1,28 @@
-export const fonts = {
-  sans: {
-    regular: 'Inter-Regular',
-    semiBold: 'Inter-SemiBold',
-    bold: 'Inter-Bold',
-  },
-  mono: {
-    regular: 'JetBrainsMono-Regular',
-    bold: 'JetBrainsMono-Bold',
-  },
-} as const;
-
 export const typography = {
-  headlineLg: {
-    fontFamily: fonts.sans.bold,
-    fontSize: 32,
-    lineHeight: 40,
-    letterSpacing: -0.64,
+  title: {
+    fontSize: 28,
+    fontWeight: '700' as const,
+    lineHeight: 34,
   },
-  headlineMd: {
-    fontFamily: fonts.sans.semiBold,
-    fontSize: 24,
-    lineHeight: 32,
-  },
-  headlineSm: {
-    fontFamily: fonts.sans.semiBold,
-    fontSize: 20,
-    lineHeight: 28,
-  },
-  bodyLg: {
-    fontFamily: fonts.sans.regular,
-    fontSize: 16,
+  heading: {
+    fontSize: 18,
+    fontWeight: '600' as const,
     lineHeight: 24,
   },
-  bodyMd: {
-    fontFamily: fonts.sans.regular,
-    fontSize: 14,
-    lineHeight: 20,
+  body: {
+    fontSize: 15,
+    fontWeight: '400' as const,
+    lineHeight: 22,
   },
-  codeMd: {
-    fontFamily: fonts.mono.regular,
-    fontSize: 14,
-    lineHeight: 20,
+  caption: {
+    fontSize: 13,
+    fontWeight: '400' as const,
+    lineHeight: 18,
   },
-  codeSm: {
-    fontFamily: fonts.mono.regular,
+  mono: {
     fontSize: 12,
-    lineHeight: 16,
-  },
-  labelCaps: {
-    fontFamily: fonts.mono.bold,
-    fontSize: 11,
-    lineHeight: 16,
-    letterSpacing: 0.55,
-    textTransform: 'uppercase' as const,
-  },
-  metricDisplay: {
-    fontFamily: fonts.mono.bold,
-    fontSize: 28,
-    lineHeight: 32,
+    fontWeight: '400' as const,
+    lineHeight: 18,
+    fontFamily: 'JetBrainsMono-Regular',
   },
 } as const;
-
-export type TypographyToken = keyof typeof typography;

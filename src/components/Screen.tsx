@@ -1,116 +1,41 @@
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  View,
-  type StyleProp,
-  type ViewStyle,
-} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {Text} from '../components/Text';
+import React, {type PropsWithChildren} from 'react';
+import {ScrollView, StyleSheet, View, type ViewStyle} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {colors, spacing} from '../theme';
 
-type Props = {
-  children: React.ReactNode;
-  style?: StyleProp<ViewStyle>;
-  contentStyle?: StyleProp<ViewStyle>;
+type ScreenProps = PropsWithChildren<{
   scroll?: boolean;
-};
+  contentStyle?: ViewStyle;
+}>;
 
-export function Screen({
-  children,
-  style,
-  contentStyle,
-  scroll = true,
-}: Props) {
-  const insets = useSafeAreaInsets();
-  const padding = {
-    paddingTop: spacing.md,
-    paddingBottom: insets.bottom + spacing.md,
-    paddingHorizontal: spacing.marginMobile,
-  };
-
-  if (!scroll) {
-    return (
-      <View style={[styles.root, padding, style]}>
-        <View style={[styles.content, contentStyle]}>{children}</View>
-      </View>
-    );
-  }
-
-  return (
+export function Screen({children, scroll = true, contentStyle}: ScreenProps) {
+  const body = scroll ? (
     <ScrollView
-      style={[styles.root, style]}
-      contentContainerStyle={[styles.content, padding, contentStyle]}
+      contentContainerStyle={[styles.content, contentStyle]}
       keyboardShouldPersistTaps="handled">
       {children}
     </ScrollView>
+  ) : (
+    <View style={[styles.content, styles.flex, contentStyle]}>{children}</View>
   );
-}
 
-type RowProps = {
-  title: string;
-  subtitle?: string;
-  meta?: string;
-  accentColor?: string;
-  onPress?: () => void;
-};
-
-export function CatalogRow({
-  title,
-  subtitle,
-  meta,
-  accentColor,
-  onPress,
-}: RowProps) {
   return (
-    <Pressable
-      onPress={onPress}
-      style={({pressed}) => [
-        styles.row,
-        accentColor ? {borderLeftWidth: 4, borderLeftColor: accentColor} : null,
-        pressed && styles.rowPressed,
-      ]}>
-      <View style={styles.rowBody}>
-        <Text variant="bodyLg">{title}</Text>
-        {subtitle ? (
-          <Text variant="bodyMd" color={colors.onSurfaceVariant}>
-            {subtitle}
-          </Text>
-        ) : null}
-      </View>
-      {meta ? (
-        <Text variant="labelCaps" color={colors.outline}>
-          {meta}
-        </Text>
-      ) : null}
-    </Pressable>
+    <SafeAreaView style={styles.safe} edges={['bottom', 'left', 'right']}>
+      {body}
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  root: {
+  safe: {
     flex: 1,
     backgroundColor: colors.background,
   },
-  content: {
-    gap: spacing.md,
-  },
-  row: {
-    backgroundColor: colors.surfaceContainer,
-    borderColor: colors.border,
-    borderWidth: 1,
-    borderRadius: 4,
-    padding: spacing.containerPadding,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-  },
-  rowPressed: {
-    backgroundColor: colors.surfaceContainerHigh,
-  },
-  rowBody: {
+  flex: {
     flex: 1,
-    gap: 4,
+  },
+  content: {
+    padding: spacing.lg,
+    gap: spacing.md,
   },
 });

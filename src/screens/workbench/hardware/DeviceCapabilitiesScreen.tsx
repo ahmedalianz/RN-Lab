@@ -1,1 +1,0 @@
-export {DeviceCapabilitiesScreen} from './HardwareSpecialScreens';

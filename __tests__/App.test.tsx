@@ -19,12 +19,16 @@ jest.mock('react-native-gesture-handler', () => {
   };
 });
 
+jest.mock('react-native-bootsplash', () => ({
+  hide: jest.fn(() => Promise.resolve()),
+}));
+
 jest.mock('../src/navigation/RootNavigator', () => {
   const {View, Text} = require('react-native');
   return {
     RootNavigator: () => (
       <View>
-        <Text>RN Lab</Text>
+        <Text>Advanced RN Playground</Text>
       </View>
     ),
   };
